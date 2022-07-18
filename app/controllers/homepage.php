@@ -6,19 +6,9 @@ $db = new QueryBuilder();
 
 $posts = $db->getAll('posts');
 
-echo '<pre>';
-var_dump($posts);
-echo '</pre>';
 
-echo '-----';
+// Create new Plates instance
+$templates = new League\Plates\Engine('../app/views/');
 
-//$db->insert(['title'=>'New title from QueryFactory'],'posts');
-//$db->update(['title' => 'TITLE2'],'posts',2);
-$db->delete(5, 'posts');
-echo '-----';
-
-$posts = $db->getAll('posts');
-
-echo '<pre>';
-var_dump($posts);
-echo '</pre>';
+// Render a template
+echo $templates->render('home', ['message' => 'Что то написал']);

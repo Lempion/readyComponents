@@ -1,6 +1,8 @@
 {
   "require": {
-    "aura/sqlquery": "2.7.1"
+    "aura/sqlquery": "2.7.1",
+    "league/plates": "^3.4",
+    "kint-php/kint": "^4.1"
   },
   "autoload": {
     "psr-4": {
