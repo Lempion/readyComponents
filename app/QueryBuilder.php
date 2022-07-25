@@ -18,12 +18,12 @@ class QueryBuilder
 
     }
 
-    public function getAll($table)
+    public function getAll($table, $cols = ['*'])
     {
 
         $select = $this->queryFactory->newSelect();
 
-        $select->cols(['*'])
+        $select->cols($cols)
             ->fromRaw($table);
 
         $sth = $this->pdo->prepare($select->getStatement());

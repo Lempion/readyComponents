@@ -18,6 +18,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('POST', '/log', ['App\controllers\HomeController', 'logForm']);
 
     $r->addRoute('GET', '/verification', ['App\controllers\HomeController', 'verificationEmail']);
+
+    $r->addRoute('GET', '/admin/roles', ['App\controllers\HomeController', 'roles']);
+
+    $r->addRoute('POST', '/admin/editRole', ['App\controllers\HomeController', 'editRole']);
 });
 
 // Fetch method and URI from somewhere
