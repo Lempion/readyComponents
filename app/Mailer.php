@@ -6,7 +6,6 @@ use SimpleMail;
 
 class Mailer
 {
-
     public static function sendRegisterDataVerification(array $dataVerification, $email, $username)
     {
         $linkVerification = 'http://' . $_SERVER['HTTP_HOST'] . '/verification?selector=' . $dataVerification['selector'] . '&token=' . $dataVerification['token'];

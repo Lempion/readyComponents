@@ -2,31 +2,38 @@
 
 namespace App\controllers;
 
-use App\QueryBuilder;
-use Exception;
+use JasonGrimes\Paginator;
 use League\Plates\Engine;
-use PDO;
+use App\QueryBuilder;
+use Delight\Auth\Auth;
 use App\Mailer;
+use Exception;
+use PDO;
+
 
 class HomeController
 {
     private $templates, $auth, $queryBuilder;
 
-    public function __construct()
+    public function __construct(QueryBuilder $qb, Engine $engine, Auth $auth)
     {
-        $db = new PDO('mysql:host=localhost;dbname=app2', 'root', '');
-        $this->queryBuilder = new QueryBuilder();
-
-        $this->auth = new \Delight\Auth\Auth($db);
-        $this->templates = new Engine('../app/views/');
+        $this->queryBuilder = $qb;
+        $this->templates = $engine;
+        $this->auth = $auth;
     }
 
     public function index()
     {
-        $db = new QueryBuilder();
-        $posts = $db->getAll('posts');
+        $postsPerPage = 4;
+        $currentPage = ($_GET['page'] ?: 1);
+        $urlPattern = '/?page=(:num)';
 
-        echo $this->templates->render('home', ['message' => 'Домашняя страница', 'posts' => $posts, 'auth' => $this->auth]);
+        $posts = $this->queryBuilder->getWithLimit('posts', $postsPerPage, $currentPage);
+        $totalPosts = count($this->queryBuilder->getAll('posts'));
+
+        $paginator = new Paginator($totalPosts, $postsPerPage, $currentPage, $urlPattern);
+
+        echo $this->templates->render('home', ['message' => 'Домашняя страница', 'posts' => $posts, 'auth' => $this->auth, 'paginator' => $paginator]);
     }
 
     public function post($data)

@@ -26,6 +26,7 @@ class QueryBuilder
         $select->cols($cols)
             ->fromRaw($table);
 
+
         $sth = $this->pdo->prepare($select->getStatement());
 
         $sth->execute($select->getBindValues());
@@ -92,6 +93,24 @@ class QueryBuilder
         $sth = $this->pdo->prepare($delete->getStatement());
 
         $sth->execute($delete->getBindValues());
+    }
+
+    public function getWithLimit($table, $limit, $offset, $cols = ['*'])
+    {
+
+        $select = $this->queryFactory->newSelect();
+
+        $select->cols($cols)
+            ->fromRaw($table)
+            ->setPaging($limit)
+            ->page($offset);
+
+        $sth = $this->pdo->prepare($select->getStatement());
+
+        $sth->execute($select->getBindValues());
+
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
+
     }
 
 

@@ -24,6 +24,9 @@
         <?php endforeach; ?>
         </tbody>
     </table>
+
+<?php echo $paginator;?>
+
 <?php else: ?>
     <h1>Зарегистрируйтесь или войдите</h1>
 <?php endif; ?>

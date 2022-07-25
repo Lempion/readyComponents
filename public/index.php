@@ -4,6 +4,29 @@ if (!session_id()) @session_start();
 
 require '../vendor/autoload.php';
 
+$containerBuilder = new DI\ContainerBuilder();
+$containerBuilder->addDefinitions([
+        PDO::class => function () {
+
+            $db = 'mysql';
+            $host = 'localhost';
+            $dbName = 'app2';
+            $login = 'root';
+            $pass = '';
+
+            return new PDO("{$db}:host={$host};dbname={$dbName}", $login, $pass);
+        },
+        \League\Plates\Engine::class => function () {
+            return new \League\Plates\Engine('../app/views/');
+        },
+        \Delight\Auth\Auth::class => function ($container) {
+            return new \Delight\Auth\Auth($container->get('PDO'));
+        }
+    ]
+
+);
+$container = $containerBuilder->build();
+
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\controllers\HomeController', 'index']);
 
@@ -44,13 +67,9 @@ switch ($routeInfo[0]) {
         echo '405 Method Not Allowed';
         break;
     case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars = $routeInfo[2];
-
-        $controller = new $handler[0];
-        call_user_func([$controller, $handler[1]], $vars);
-
+        $container->call($routeInfo[1], $routeInfo[2]);
         break;
+
 }
 
 
